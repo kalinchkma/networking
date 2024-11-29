@@ -1,0 +1,53 @@
+version: "3.9"
+
+services:
+  ubuntu1:
+    build: .
+    container_name: ubuntu1
+    hostname: ubuntu1
+    networks:
+      ssh_network:
+        ipv4_address: 192.168.1.11
+    ports:
+      - "2201:22" # Map SSH port
+    volumes:
+      - ubuntu1_data:/data # Persistent volume for state
+      - ./ssh_config/authorized_keys:/root/.ssh/authorized_keys # Mount SSH keys file
+
+  ubuntu2:
+    build: .
+    container_name: ubuntu2
+    hostname: ubuntu2
+    networks:
+      ssh_network:
+        ipv4_address: 192.168.1.12
+    ports:
+      - "2202:22" # Map SSH port
+    volumes:
+      - ubuntu2_data:/data # Persistent volume for state
+      - ./ssh_config/authorized_keys:/root/.ssh/authorized_keys # Mount SSH keys file
+
+  ubuntu3:
+    build: .
+    container_name: ubuntu3
+    hostname: ubuntu3
+    networks:
+      ssh_network:
+        ipv4_address: 192.168.1.13
+    ports:
+      - "2203:22" # Map SSH port
+    volumes:
+      - ubuntu3_data:/data # Persistent volume for state
+      - ./ssh_config/authorized_keys:/root/.ssh/authorized_keys # Mount SSH keys file
+
+networks:
+  ssh_network:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 192.168.1.0/24
+
+volumes:
+  ubuntu1_data:
+  ubuntu2_data:
+  ubuntu3_data:
