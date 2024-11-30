@@ -1,7 +1,9 @@
 package main
 
 import (
+	"io"
 	"net"
+	"os"
 	"strconv"
 	"strings"
 )
@@ -30,5 +32,24 @@ func ValidateIPAddress(ip string) bool {
 		}
 	} else {
 		return false
+	}
+}
+
+// Read IP File
+//
+// # Error
+//
+// If file not exist and cannot read file
+func ReadIPFile(ipFileName string) ([]string, error) {
+	// check if file is exist
+	if file, err := os.OpenFile(ipFileName, os.O_RDONLY, os.ModeDevice); err != nil {
+		return nil, err
+	} else {
+		defer file.Close()
+		if fileContent, err := io.ReadAll(file); err != nil {
+			return nil, err
+		} else {
+			return strings.Split(string(fileContent), "\n"), nil
+		}
 	}
 }
