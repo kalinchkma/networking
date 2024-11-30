@@ -5,12 +5,13 @@ FROM ubuntu:latest
 RUN apt-get update && apt-get install -y \
     openssh-server \
     net-tools \
+    nodejs \
+    git \
+    python3 \
     iputils-ping && \
-    mkdir /var/run/sshd
-
+    mkdir /var/run/sshd \
 # Set root password
-RUN echo "root:password" | chpasswd
-
+# RUN echo "root:" | chpasswd
 # Allow SSH login with root
 COPY ssh_config/sshd_config /etc/ssh/sshd_config
 
