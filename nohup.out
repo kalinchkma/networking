@@ -1,0 +1,53 @@
+The disableGPU setting is set to undefined
+Not disabling GPU
+Main: Starting cleanup of stale files
+Main: Cleanup of stale files completed
+Main~createDefaultWorkingDir - Default working dir creation already attempted
+1733679741464 main info "Booting Postman 11.21.0, linux-6.1.0-28-amd64 on x64"
+1733679741465 main info "EventBus~initialize - Success"
+1733679741563 main info "Proxy configuration has not been setup"
+1733679741563 main info "CloudProxyManager~init - Success"
+1733679741861 main info "performShellDataMigration: Migration has already been done. Bailing out"
+1733679741868 main info "UpdateHandler~init - Success"
+1733679741922 main info "LeaderSelection: Initialized successfully"
+1733679741922 main info "VersionDependencyService: Initialized successfully"
+1733679741950 main info "GPU detected VID 32902 DID 16017 ACTIVE true"
+1733679741951 main info "shellController~init: Success"
+1733679741952 main info "shellMeta~init: Success"
+1733679741952 main info "partitionMigrationService: State of V7 partition:"
+1733679741952 main info "partitionMigrationService: V7 partitions",[]
+1733679741952 main info "partitionMigrationService~rectifyNamespaceOfScratchPadPartition: There is no partition with scratchpad namespace"
+1733679741952 main info "partitionMigrationService~rectifyNamespaceOfScratchPadPartition: There is no transit partition which could have been used for scratchpad"
+1733679741952 main info "partitionMigrationService~init: Success"
+1733679741953 main info "partitionMigrationService~runV8PartitionsIntegrity: Two way migration~ removing the following partitions from v8",[]
+1733679741953 main info "userPartitionService~getRecentV8UserPartition: recent v8 user context partition ","b76a0eea-1449-46c8-9af5-cf1fbbde8bb2"
+1733679741953 main info "userPartitionService~_rectifyTheActivePartitionOfApplication: Setting the active partition to ","b76a0eea-1449-46c8-9af5-cf1fbbde8bb2"
+1733679741957 main info "LinuxAutoUpdater~Cleanup - Initial cleanup successful"
+1733679741958 main info "newAccountRegionPreferenceService~getPreferenceWithFallback - Preference not found in storage."
+1733679741958 main info "newAccountRegionPreferenceService~getToggleMenuTemplate - Using preference:","useUSRegion"
+1733679742126 main info "userPartitionService~init: Success"
+1733679742302 main info "userPartitionService: State of v8 partition system:"
+1733679742302 main info "shell~init~getPartitionToLoad: loading active partition"
+1733679742302 main info "userPartitionService: List of partitions:",[{"partitionId":"b76a0eea-1449-46c8-9af5-cf1fbbde8bb2","namespace":"users","userId":"21081592","teamId":"3500662","lastUpdated":"2024-10-29T16:27:07.326Z"},{"partitionId":"809ca982-6e54-4ab2-a8d2-7f5f7c044e8e","namespace":"scratchPad","userId":0,"teamId":0,"isDirty":false}]
+1733679742303 main info "userPartitionService: users global meta:",{}
+1733679742303 main info "Main:windowManager~newRequesterWindow: Fetch and update runtime config: us"
+1733679746649 main info "Main~getRemoteInitPath:: "
+1733679746825 main info "UpdateHandler~app-update-events - Received event",{"name":"checkForElectronVersionUpdated","namespace":"appUpdate"}
+1733679746829 main info "INTERCEPTOR CONNECTIVITY: Connecting to Interceptor Bridge"
+1733679746842 main info "windowManager: First requester booted successfully."
+1733679746842 main info "windowManager~restoreWindows: Restoring requester windows"
+1733679746842 main info "Main~AppEvents - Received booted event for process requester.Version 11.21.0 UI Version: 11.21.0-ui-241119-0633 Desktop Platform Version: 11.21.0"
+1733679746945 main info "Main~getRemoteInitPath:: "
+1733679748202 main info "INTERCEPTOR CONNECTIVITY: Attempting to start websocket server on port 15611"
+1733679752543 main info "RuntimeIPCAgent~started: Success"
+1733679768500 main info "Main - model-events~user - (user, bootstrapUser) received"
+1733679768500 main info "model-events~user - bootstrapUser received"
+1733679769270 main info "Main~getPlatformLaunchPerfMetrics"
+1733679769573 main info "UpdateHandler~app-update-events - Received event",{"name":"updateElectron","namespace":"appUpdate","data":{"channel":"stable","version":"11.21.0","downloadVersion":"11.22.0","appId":"5eca17e3-bd57-486c-9055-60c9eda2a786","userAgent":"Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Postman/11.21.0 Electron/28.3.1 Safari/537.36","platform":"LINUX","arch":"64","downloadURL":"https://dl.pstmn.io/download/version/11.22.0/linux_64","updateServerDomain":"https://dl.pstmn.io/","additionalParamsString":"installationId=5eca17e3-bd57-486c-9055-60c9eda2a786&userId=21081592&syncEnabled=true&teamPlan=sync-free-3-trial&teamId=3500662","userId":"21081592"}}
+1733679769573 main info "LinuxUpdater~downloadUpdate - UpdateInfo received",{"channel":"stable","version":"11.21.0","downloadVersion":"11.22.0","appId":"5eca17e3-bd57-486c-9055-60c9eda2a786","userAgent":"Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Postman/11.21.0 Electron/28.3.1 Safari/537.36","platform":"LINUX","arch":"64","downloadURL":"https://dl.pstmn.io/download/version/11.22.0/linux_64","updateServerDomain":"https://dl.pstmn.io/","additionalParamsString":"installationId=5eca17e3-bd57-486c-9055-60c9eda2a786&userId=21081592&syncEnabled=true&teamPlan=sync-free-3-trial&teamId=3500662","userId":"21081592"}
+1733679835282 main info "LinuxAutoUpdater~Extraction completed",{"packageName":"Postman","eID":"Postman-1733679769574","downloadURL":"https://dl.pstmn.io/download/version/11.22.0/linux_64","downloadDirectory":"/home/mrk/postman","downloadInfo":{"status":"DOWNLOAD_COMPLETED","error":null,"downloadDirectory":"/home/mrk/postman"},"extractInfo":{"status":"EXTRACTION_SUCCESSFUL","error":null,"extractDirectory":"/home/mrk/postman","standardOutput":"","standardError":""}}
+1733679835282 main info "@postman/app-updater: Update updateDownloaded","","Postman 11.22.0","","https://dl.pstmn.io/download/version/11.22.0/linux_64"
+1733679835282 main info "UpdateHandler~app-update-events - Received event",{"name":"electronAppUpdateDownloaded","namespace":"appUpdate","data":{"releaseName":"Postman 11.22.0","notes":"","date":"","URL":"https://dl.pstmn.io/download/version/11.22.0/linux_64"}}
+[33718:1209/003524.207138:ERROR:gl_surface_presentation_helper.cc(260)] GetVSyncParametersIfAvailable() failed for 1 times!
+[33718:1209/003524.222635:ERROR:gl_surface_presentation_helper.cc(260)] GetVSyncParametersIfAvailable() failed for 2 times!
+[33718:1209/003525.516452:ERROR:gl_surface_presentation_helper.cc(260)] GetVSyncParametersIfAvailable() failed for 3 times!

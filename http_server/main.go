@@ -22,6 +22,9 @@ func main() {
 	// Health check
 	mux.HandleFunc("GET /api/healthz", middlewareLog(handerRediness))
 
+	// Validate json body
+	mux.HandleFunc("POST /api/validate_zingy", middlewareLog(validate_zingy))
+
 	// Metrics
 	mux.HandleFunc("GET /admin/metrics", middlewareLog(apiCfg.handlerMetrics))
 
