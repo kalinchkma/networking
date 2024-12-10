@@ -12,6 +12,8 @@ import (
 	_ "github.com/lib/pq"
 )
 
+var cfg *database.Queries
+
 func main() {
 	const port = "8080"
 	const filepathRoot = "./public"
@@ -28,7 +30,7 @@ func main() {
 		return
 	}
 
-	_ = database.New(db)
+	cfg = database.New(db)
 
 	apiCfg := apiConfig{
 		fileServerHits: atomic.Int32{},
@@ -44,6 +46,9 @@ func main() {
 
 	// Validate json body
 	mux.HandleFunc("POST /api/validate_zingy", middlewareLog(validate_zingy))
+
+	// Create user
+	mux.HandleFunc("POST /api/users", middlewareLog(createNewUser))
 
 	// Metrics
 	mux.HandleFunc("GET /admin/metrics", middlewareLog(apiCfg.handlerMetrics))
