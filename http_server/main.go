@@ -38,6 +38,7 @@ func main() {
 
 	mux := http.NewServeMux()
 
+
 	// File serving
 	mux.Handle("GET /app/", apiCfg.middlewareMetricsInc(http.StripPrefix("/app/", http.FileServer(http.Dir(filepathRoot)))))
 
