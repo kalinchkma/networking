@@ -10,6 +10,15 @@ import (
 	"github.com/google/uuid"
 )
 
+type Chrip struct {
+	ID        uuid.UUID
+	CreatedAt sql.NullTime
+	UpdatedAt sql.NullTime
+	Body      sql.NullString
+	UserID    uuid.NullUUID
+	Forgeign  interface{}
+}
+
 type User struct {
 	ID        uuid.UUID
 	CreatedAt sql.NullTime

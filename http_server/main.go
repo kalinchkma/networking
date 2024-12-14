@@ -57,9 +57,14 @@ func main() {
 	// Reset counter
 	mux.HandleFunc("POST /admin/reset", middlewareLog(apiCfg.handerReset))
 
+  // Create chirp
+  mux.HandleFunc("POST /api/chirps", middlewareLog(func(w http.ResponseWriter, r *http.Request) {
+
+  }))
+
 	server := http.Server{
 		Addr:    ":" + port,
-		Handler: mux,
+		Handler: mux, 
 	}
 
 	log.Printf("Serving files from %s on port: %s\n", filepathRoot, port)
