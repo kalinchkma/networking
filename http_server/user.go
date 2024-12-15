@@ -1,8 +1,9 @@
 package main
 
 import (
-	"database/sql"
 	"encoding/json"
+	"gnja_server/internal/auth"
+	"gnja_server/internal/database"
 	"log"
 	"net/http"
 )
@@ -10,7 +11,8 @@ import (
 func createNewUser(w http.ResponseWriter, r *http.Request) {
 	// Request body
 	type RequestBody struct {
-		Email string `json:"email"`
+		Email    string `json:"email"`
+		Password string `json:"password"`
 	}
 
 	decoder := json.NewDecoder(r.Body)
@@ -24,12 +26,22 @@ func createNewUser(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	// hash password
+	HashedPassword, err := auth.HashPassword(reqBody.Password)
+	if err != nil {
+		w.WriteHeader(500)
+		w.Write([]byte("Internal server error"))
+		return
+	}
+
+	newUser := database.CreateUserParams{
+		Email:          reqBody.Email,
+		HashedPassword: HashedPassword,
+	}
+
 	// save the user
-	user, err := cfg.CreateUser(r.Context(),
-		sql.NullString{
-			String: reqBody.Email,
-			Valid:  reqBody.Email != "",
-		})
+	user, err := cfg.CreateUser(r.Context(), newUser)
+
 	if err != nil {
 		log.Printf("Error saving user to database: %s", err)
 		w.Header().Add("Content-Type", "application/json")
@@ -49,4 +61,43 @@ func createNewUser(w http.ResponseWriter, r *http.Request) {
 	w.Header().Add("Content-Type", "application/json")
 	w.WriteHeader(200)
 	w.Write(resBody)
+}
+
+func login(w http.ResponseWriter, r *http.Request) {
+	// Request body
+	type requestBody struct {
+		Email    string `json:"email"`
+		Password string `json:"password"`
+	}
+
+	// json decoder
+	decoder := json.NewDecoder(r.Body)
+	body := requestBody{}
+	err := decoder.Decode(&body)
+	if err != nil {
+		log.Printf("body decoing error: %v", err)
+		w.WriteHeader(500)
+		w.Write([]byte("Internal server error"))
+		return
+	}
+
+	// Find the user by email
+	user, err := cfg.GetUserByEmail(r.Context(), body.Email)
+	// Check error
+	if err != nil {
+		log.Printf("Error parsing user: %v", err)
+		w.WriteHeader(500)
+		w.Write([]byte("Internal server error"))
+		return
+	}
+
+	// Compare password
+	err = auth.CheckPasswordHash(body.Password, user.HashedPassword)
+	// Check error
+	if err != nil {
+		log.Printf("Error comparing password: %v\n", err)
+		w.WriteHeader(500)
+		w.Write([]byte("Internal server error"))
+		return
+	}
 }

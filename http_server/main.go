@@ -41,6 +41,9 @@ func main() {
 	// File serving
 	mux.Handle("GET /app/", apiCfg.middlewareMetricsInc(http.StripPrefix("/app/", http.FileServer(http.Dir(filepathRoot)))))
 
+	// Authentication
+	mux.HandleFunc("POST /api/login", middlewareLog(login))
+
 	// Health check
 	mux.HandleFunc("GET /api/healthz", middlewareLog(handerRediness))
 
@@ -50,12 +53,6 @@ func main() {
 	// Create user
 	mux.HandleFunc("POST /api/users", middlewareLog(createNewUser))
 
-	// Metrics
-	mux.HandleFunc("GET /admin/metrics", middlewareLog(apiCfg.handlerMetrics))
-
-	// Reset counter
-	mux.HandleFunc("POST /admin/reset", middlewareLog(apiCfg.handerReset))
-
 	// Create chirp
 	mux.HandleFunc("POST /api/chirps", middlewareLog(createNewChirps))
 
@@ -64,6 +61,12 @@ func main() {
 
 	// Get chirps
 	mux.HandleFunc("GET /api/chirps/{chirpID}", middlewareLog(getChirpsByID))
+
+	// Metrics
+	mux.HandleFunc("GET /admin/metrics", middlewareLog(apiCfg.handlerMetrics))
+
+	// Reset counter
+	mux.HandleFunc("POST /admin/reset", middlewareLog(apiCfg.handerReset))
 
 	server := http.Server{
 		Addr:    ":" + port,
