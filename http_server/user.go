@@ -6,6 +6,8 @@ import (
 	"gnja_server/internal/database"
 	"log"
 	"net/http"
+
+	"github.com/google/uuid"
 )
 
 func createNewUser(w http.ResponseWriter, r *http.Request) {
@@ -100,4 +102,33 @@ func login(w http.ResponseWriter, r *http.Request) {
 		w.Write([]byte("Internal server error"))
 		return
 	}
+
+	type ResponseData struct {
+		ID        uuid.UUID `json:"id"`
+		CreatedAt string    `json:"created_at"`
+		UpdatedAt string    `json:"updated_at"`
+		Email     string    `json:"email"`
+	}
+
+	responseData := ResponseData{
+		ID:        user.ID,
+		CreatedAt: user.CreatedAt.Time.String(),
+		UpdatedAt: user.UpdatedAt.Time.String(),
+		Email:     user.Email,
+	}
+
+	// Prepare login success object
+	resObject, err := json.Marshal(responseData)
+	// Check error
+	if err != nil {
+		log.Printf("Error marshaling user object: %v", err)
+		w.WriteHeader(500)
+		w.Write([]byte("Internal server error"))
+		return
+	}
+
+	// Return success if passowrd matched
+	w.Header().Add("Content-Type", "application/json")
+	w.WriteHeader(200)
+	w.Write(resObject)
 }
