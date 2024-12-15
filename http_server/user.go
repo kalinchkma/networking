@@ -6,6 +6,7 @@ import (
 	"gnja_server/internal/database"
 	"log"
 	"net/http"
+	"time"
 
 	"github.com/google/uuid"
 )
@@ -103,11 +104,21 @@ func login(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	// Generate token
+	token, err := auth.MakeJWT(user.ID, auth.SUPER_SECRET, time.Minute*10)
+	if err != nil {
+		log.Printf("Error creating jwt token: %v", err)
+		w.WriteHeader(500)
+		w.Write([]byte("Internal server error"))
+		return
+	}
+
 	type ResponseData struct {
 		ID        uuid.UUID `json:"id"`
 		CreatedAt string    `json:"created_at"`
 		UpdatedAt string    `json:"updated_at"`
 		Email     string    `json:"email"`
+		Token     string    `json:"token"`
 	}
 
 	responseData := ResponseData{
@@ -115,6 +126,7 @@ func login(w http.ResponseWriter, r *http.Request) {
 		CreatedAt: user.CreatedAt.Time.String(),
 		UpdatedAt: user.UpdatedAt.Time.String(),
 		Email:     user.Email,
+		Token:     token,
 	}
 
 	// Prepare login success object
