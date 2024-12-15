@@ -16,7 +16,6 @@ type Chrip struct {
 	UpdatedAt sql.NullTime
 	Body      sql.NullString
 	UserID    uuid.NullUUID
-	Forgeign  interface{}
 }
 
 type User struct {

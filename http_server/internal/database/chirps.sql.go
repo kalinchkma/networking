@@ -21,7 +21,7 @@ VALUES (
     $1,
     $2
 )
-RETURNING id, created_at, updated_at, body, user_id, forgeign
+RETURNING id, created_at, updated_at, body, user_id
 `
 
 type CreateCirpsParams struct {
@@ -38,7 +38,6 @@ func (q *Queries) CreateCirps(ctx context.Context, arg CreateCirpsParams) (Chrip
 		&i.UpdatedAt,
 		&i.Body,
 		&i.UserID,
-		&i.Forgeign,
 	)
 	return i, err
 }
