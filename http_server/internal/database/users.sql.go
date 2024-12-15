@@ -32,3 +32,35 @@ func (q *Queries) CreateUser(ctx context.Context, email sql.NullString) (User, e
 	)
 	return i, err
 }
+
+const getUser = `-- name: GetUser :many
+SELECT id, created_at, updated_at, email FROM users
+`
+
+func (q *Queries) GetUser(ctx context.Context) ([]User, error) {
+	rows, err := q.db.QueryContext(ctx, getUser)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	var items []User
+	for rows.Next() {
+		var i User
+		if err := rows.Scan(
+			&i.ID,
+			&i.CreatedAt,
+			&i.UpdatedAt,
+			&i.Email,
+		); err != nil {
+			return nil, err
+		}
+		items = append(items, i)
+	}
+	if err := rows.Close(); err != nil {
+		return nil, err
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
+}
