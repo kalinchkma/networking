@@ -130,3 +130,49 @@ func getChirps(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(200)
 	w.Write(resBody)
 }
+
+func getChirpsByID(w http.ResponseWriter, r *http.Request) {
+
+	chirpIDStr := r.PathValue("chirpID")
+
+	log.Printf("Requested chirp ID: %v, %v", chirpIDStr, chirpIDStr == "")
+
+	// Check chirp is is provided
+	if chirpIDStr == "" {
+		w.WriteHeader(404)
+		w.Write([]byte("Chirps not found"))
+		return
+	}
+
+	// Parse chirpID
+	chirpID, err := uuid.Parse(chirpIDStr)
+
+	if err != nil {
+		log.Printf("Error parsing uuid: %v", err)
+		w.WriteHeader(500)
+		w.Write([]byte("Internal server error"))
+		return
+	}
+
+	// Find chirsp into database
+	chirp, err := cfg.GetChirpsByID(r.Context(), chirpID)
+
+	if err != nil {
+		log.Printf("Error parsing chirp: %v", err)
+		w.WriteHeader(500)
+		w.Write([]byte("Internal server error"))
+		return
+	}
+
+	// Encode chirp
+	chirpData, err := json.Marshal(chirp)
+	if err != nil {
+		w.WriteHeader(500)
+		w.Write([]byte("Internal server error"))
+		return
+	}
+
+	w.Header().Add("Content-Type", "application/json")
+	w.WriteHeader(200)
+	w.Write(chirpData)
+}

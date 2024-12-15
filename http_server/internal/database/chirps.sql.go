@@ -74,3 +74,20 @@ func (q *Queries) GetChirps(ctx context.Context) ([]Chrip, error) {
 	}
 	return items, nil
 }
+
+const getChirpsByID = `-- name: GetChirpsByID :one
+SELECT id, created_at, updated_at, body, user_id FROM chrips WHERE id=$1
+`
+
+func (q *Queries) GetChirpsByID(ctx context.Context, id uuid.UUID) (Chrip, error) {
+	row := q.db.QueryRowContext(ctx, getChirpsByID, id)
+	var i Chrip
+	err := row.Scan(
+		&i.ID,
+		&i.CreatedAt,
+		&i.UpdatedAt,
+		&i.Body,
+		&i.UserID,
+	)
+	return i, err
+}

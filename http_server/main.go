@@ -62,6 +62,9 @@ func main() {
 	// Get all chirps
 	mux.HandleFunc("GET /api/chirps", middlewareLog(getChirps))
 
+	// Get chirps
+	mux.HandleFunc("GET /api/chirps/{chirpID}", middlewareLog(getChirpsByID))
+
 	server := http.Server{
 		Addr:    ":" + port,
 		Handler: mux,
