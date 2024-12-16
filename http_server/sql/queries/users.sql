@@ -9,6 +9,7 @@ VALUES (
 )
 RETURNING *;
 
+
 -- name: GetUser :many
 SELECT * FROM users;
 
@@ -17,3 +18,6 @@ SELECT * FROM users WHERE email=$1;
 
 -- name: GetUserByID :one
 SELECT * FROM users WHERE id=$1;
+
+-- name: UpdateUserByID :exec
+UPDATE users SET email = $1, hashed_password = $2 WHERE id = $3;

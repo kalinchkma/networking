@@ -63,6 +63,9 @@ func main() {
 	// Create user
 	mux.HandleFunc("POST /api/users", middlewareLog(createNewUser))
 
+	// Update user
+	mux.HandleFunc("PUT /api/users", middlewareLog(updateUsers))
+
 	// Create chirp
 	mux.HandleFunc("POST /api/chirps", middlewareLog(createNewChirps))
 
