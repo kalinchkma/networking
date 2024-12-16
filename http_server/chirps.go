@@ -39,7 +39,7 @@ func createNewChirps(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		log.Printf("Error parsing userID: %v", err)
 		w.WriteHeader(500)
-		w.Write([]byte("Internal server error"))
+		w.Write([]byte("Unautorized token expried"))
 		return
 	}
 

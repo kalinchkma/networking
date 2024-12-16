@@ -7,10 +7,21 @@ import (
 	"gnja_server/internal/database"
 	"log"
 	"net/http"
+	"strings"
 	"time"
 
 	"github.com/google/uuid"
 )
+
+// Success response data type
+type ResponseData struct {
+	ID           uuid.UUID `json:"id"`
+	CreatedAt    string    `json:"created_at"`
+	UpdatedAt    string    `json:"updated_at"`
+	Email        string    `json:"email"`
+	Token        string    `json:"token"`
+	RefreshToken string    `json:"refresh_teken"`
+}
 
 func login(w http.ResponseWriter, r *http.Request) {
 	// Request body
@@ -87,16 +98,6 @@ func login(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// Success response data type
-	type ResponseData struct {
-		ID           uuid.UUID `json:"id"`
-		CreatedAt    string    `json:"created_at"`
-		UpdatedAt    string    `json:"updated_at"`
-		Email        string    `json:"email"`
-		Token        string    `json:"token"`
-		RefreshToken string    `json:"refresh_teken"`
-	}
-
 	// Create reponse data
 	responseData := ResponseData{
 		ID:           user.ID,
@@ -121,4 +122,56 @@ func login(w http.ResponseWriter, r *http.Request) {
 	w.Header().Add("Content-Type", "application/json")
 	w.WriteHeader(200)
 	w.Write(resObject)
+}
+
+func refresh(w http.ResponseWriter, r *http.Request) {
+	// Extract the token from the Authorization header
+	authHeader := r.Header.Get("Authorization")
+	if !strings.HasPrefix(authHeader, "Bearer ") {
+		http.Error(w, "Authorization header must start with 'Bearer '", http.StatusUnauthorized)
+		return
+	}
+
+	refreshToken := strings.TrimPrefix(authHeader, "Bearer ")
+
+	// Validate the refresh token in the database
+	dbToken, err := cfg.DB.GetRefreshTokenByToken(r.Context(), refreshToken)
+
+	if err != nil || (dbToken.RevokedAt != sql.NullTime{}) || time.Now().After(dbToken.ExpiresAt) {
+		http.Error(w, "Invalid or expired refresh token", http.StatusUnauthorized)
+		return
+	}
+
+	// Generate the access token
+	accessToken, err := auth.MakeJWT(dbToken.UserID, cfg.JWT_SECRET, time.Second*60)
+	if err != nil {
+		http.Error(w, "Failed to generate access token", http.StatusInternalServerError)
+		return
+	}
+
+	// Response with access token
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(http.StatusOK)
+	w.Write([]byte(`{"token": ` + accessToken + `}`))
+}
+
+func revoke(w http.ResponseWriter, r *http.Request) {
+	// Extract token from Autorization header
+	authHeader := r.Header.Get("Authorization")
+	if !strings.HasPrefix(authHeader, "Bearer ") {
+		http.Error(w, "Authorization header must start with 'Bearer '", http.StatusUnauthorized)
+		return
+	}
+
+	refreshToken := strings.TrimPrefix(authHeader, "Bearer ")
+
+	// Revoke the refresh token
+	err := cfg.DB.RevokeRefreshToken(r.Context(), refreshToken)
+	if err != nil {
+		http.Error(w, "Failed to revoke token", http.StatusUnauthorized)
+		return
+	}
+
+	// Response with 204 No context
+	w.WriteHeader(http.StatusNoContent)
 }

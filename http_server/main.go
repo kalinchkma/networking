@@ -48,6 +48,12 @@ func main() {
 	// Authentication
 	mux.HandleFunc("POST /api/login", middlewareLog(login))
 
+	// Refresh token
+	mux.HandleFunc("POST /api/refresh", middlewareLog(refresh))
+
+	// Revoke token
+	mux.HandleFunc("POST /api/revoke", middlewareLog(revoke))
+
 	// Health check
 	mux.HandleFunc("GET /api/healthz", middlewareLog(handerRediness))
 
