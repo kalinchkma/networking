@@ -3,6 +3,7 @@ package main
 import (
 	"database/sql"
 	"encoding/json"
+	"gnja_server/internal/auth"
 	"gnja_server/internal/database"
 	"log"
 	"net/http"
@@ -21,6 +22,27 @@ type errorResponse struct {
 }
 
 func createNewChirps(w http.ResponseWriter, r *http.Request) {
+	// Authorize user
+	token, err := auth.GetBearerToken(r.Header)
+	// Check error
+	if err != nil {
+		log.Printf("Authorization error: %v", err)
+		w.WriteHeader(401)
+		w.Write([]byte("Unauthorized"))
+		return
+	}
+
+	// Validate token
+	userID, err := auth.ValidateJWT(token, cfg.JWT_SECRET)
+
+	// Check error
+	if err != nil {
+		log.Printf("Error parsing userID: %v", err)
+		w.WriteHeader(500)
+		w.Write([]byte("Internal server error"))
+		return
+	}
+
 	// Request body
 	var body requestBody
 
@@ -28,7 +50,7 @@ func createNewChirps(w http.ResponseWriter, r *http.Request) {
 	decoder := json.NewDecoder(r.Body)
 
 	// Decode request body
-	err := decoder.Decode(&body)
+	err = decoder.Decode(&body)
 	// If body decode error return error response
 	if err != nil {
 		// Error body
@@ -56,7 +78,7 @@ func createNewChirps(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// Find the user
-	users, err := cfg.GetUser(r.Context())
+	users, err := cfg.DB.GetUserByID(r.Context(), userID)
 	// If user query error return error response
 	if err != nil {
 		w.WriteHeader(500)
@@ -65,12 +87,12 @@ func createNewChirps(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// If user not found return error
-	if len(users) <= 0 {
-		log.Printf("user not found: %v", users)
-		w.WriteHeader(500)
-		w.Write([]byte("There is no user to create chirps"))
-		return
-	}
+	// if len(users) <= 0 {
+	// 	log.Printf("user not found: %v", users)
+	// 	w.WriteHeader(500)
+	// 	w.Write([]byte("There is no user to create chirps"))
+	// 	return
+	// }
 
 	// Create chirps for first user: just for now
 	newChirps := database.CreateCirpsParams{
@@ -79,12 +101,12 @@ func createNewChirps(w http.ResponseWriter, r *http.Request) {
 			Valid:  body.Body != "",
 		},
 		UserID: uuid.NullUUID{
-			UUID:  users[0].ID,
+			UUID:  users.ID,
 			Valid: true,
 		},
 	}
 	// Save chrip to database
-	chirp, err := cfg.CreateCirps(r.Context(), newChirps)
+	chirp, err := cfg.DB.CreateCirps(r.Context(), newChirps)
 
 	// Return error creating and saving is error
 	if err != nil {
@@ -110,7 +132,7 @@ func createNewChirps(w http.ResponseWriter, r *http.Request) {
 }
 
 func getChirps(w http.ResponseWriter, r *http.Request) {
-	chirs, err := cfg.GetChirps(r.Context())
+	chirs, err := cfg.DB.GetChirps(r.Context())
 
 	if err != nil {
 		log.Printf("Error: %v", err)
@@ -155,7 +177,7 @@ func getChirpsByID(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// Find chirsp into database
-	chirp, err := cfg.GetChirpsByID(r.Context(), chirpID)
+	chirp, err := cfg.DB.GetChirpsByID(r.Context(), chirpID)
 
 	if err != nil {
 		log.Printf("Error parsing chirp: %v", err)

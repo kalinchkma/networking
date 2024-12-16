@@ -11,8 +11,6 @@ import (
 	"github.com/google/uuid"
 )
 
-const SUPER_SECRET = "super secret"
-
 func MakeJWT(userID uuid.UUID, tokenSecret string, expiresIn time.Duration) (string, error) {
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.RegisteredClaims{
 		Issuer:    "Zingy",
@@ -22,7 +20,7 @@ func MakeJWT(userID uuid.UUID, tokenSecret string, expiresIn time.Duration) (str
 	})
 
 	// Signed token with secret key
-	signedToken, err := token.SignedString([]byte(SUPER_SECRET))
+	signedToken, err := token.SignedString([]byte(tokenSecret))
 	if err != nil {
 		return "", fmt.Errorf("failed to sign token: %w", err)
 	}

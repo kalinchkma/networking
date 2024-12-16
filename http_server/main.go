@@ -3,6 +3,7 @@ package main
 import (
 	"database/sql"
 	"gnja_server/internal/database"
+	"gnja_server/internal/interfaces"
 	"log"
 	"net/http"
 	"os"
@@ -12,7 +13,7 @@ import (
 	_ "github.com/lib/pq"
 )
 
-var cfg *database.Queries
+var cfg *interfaces.Configuration
 
 func main() {
 	const port = "8080"
@@ -30,7 +31,10 @@ func main() {
 		return
 	}
 
-	cfg = database.New(db)
+	cfg = &interfaces.Configuration{
+		DB:         database.New(db),
+		JWT_SECRET: os.Getenv("JWT_SECRET"),
+	}
 
 	apiCfg := apiConfig{
 		fileServerHits: atomic.Int32{},
