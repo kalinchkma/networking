@@ -13,7 +13,7 @@ import (
 )
 
 const createCirps = `-- name: CreateCirps :one
-INSERT INTO chrips (id, created_at, updated_at, body, user_id)
+INSERT INTO chirps (id, created_at, updated_at, body, user_id)
 VALUES (
     gen_random_uuid(),
     NOW(),
@@ -29,9 +29,9 @@ type CreateCirpsParams struct {
 	UserID uuid.NullUUID
 }
 
-func (q *Queries) CreateCirps(ctx context.Context, arg CreateCirpsParams) (Chrip, error) {
+func (q *Queries) CreateCirps(ctx context.Context, arg CreateCirpsParams) (Chirp, error) {
 	row := q.db.QueryRowContext(ctx, createCirps, arg.Body, arg.UserID)
-	var i Chrip
+	var i Chirp
 	err := row.Scan(
 		&i.ID,
 		&i.CreatedAt,
@@ -42,19 +42,28 @@ func (q *Queries) CreateCirps(ctx context.Context, arg CreateCirpsParams) (Chrip
 	return i, err
 }
 
-const getChirps = `-- name: GetChirps :many
-SELECT id, created_at, updated_at, body, user_id FROM chrips
+const deleteChirps = `-- name: DeleteChirps :exec
+DELETE FROM chirps WHERE id=$1
 `
 
-func (q *Queries) GetChirps(ctx context.Context) ([]Chrip, error) {
+func (q *Queries) DeleteChirps(ctx context.Context, id uuid.UUID) error {
+	_, err := q.db.ExecContext(ctx, deleteChirps, id)
+	return err
+}
+
+const getChirps = `-- name: GetChirps :many
+SELECT id, created_at, updated_at, body, user_id FROM chirps
+`
+
+func (q *Queries) GetChirps(ctx context.Context) ([]Chirp, error) {
 	rows, err := q.db.QueryContext(ctx, getChirps)
 	if err != nil {
 		return nil, err
 	}
 	defer rows.Close()
-	var items []Chrip
+	var items []Chirp
 	for rows.Next() {
-		var i Chrip
+		var i Chirp
 		if err := rows.Scan(
 			&i.ID,
 			&i.CreatedAt,
@@ -76,12 +85,12 @@ func (q *Queries) GetChirps(ctx context.Context) ([]Chrip, error) {
 }
 
 const getChirpsByID = `-- name: GetChirpsByID :one
-SELECT id, created_at, updated_at, body, user_id FROM chrips WHERE id=$1
+SELECT id, created_at, updated_at, body, user_id FROM chirps WHERE id=$1
 `
 
-func (q *Queries) GetChirpsByID(ctx context.Context, id uuid.UUID) (Chrip, error) {
+func (q *Queries) GetChirpsByID(ctx context.Context, id uuid.UUID) (Chirp, error) {
 	row := q.db.QueryRowContext(ctx, getChirpsByID, id)
-	var i Chrip
+	var i Chirp
 	err := row.Scan(
 		&i.ID,
 		&i.CreatedAt,
