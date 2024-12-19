@@ -127,6 +127,27 @@ run server 2
 ```bash
 docker run -d -p 8001:80 -v $PWD/index2.html:/usr/share/caddy/index.html caddy
 ```
+run server with name specified in same network
+create networl
+```bash
+docker network create ganja
+```
 
+```bash
+docker run -d --network ganja --name caddy1 -p 8000:80 -v $PWD/index1.html:/usr/share/caddy/index.html caddy
+```
+```bash
+docker run -d --network ganja --name caddy2 -p 8001:80 -v $PWD/index2.html:/usr/share/caddy/index.html caddy
+```
 
+```bash
+docker run -it --network ganja docker/getting-started /bin/sh
+```
+
+create `Caddyfile`
+
+run loadbalancer
+```bash
+docker run -d --network ganja -p 8080:80 -v $PWD/Caddyfile:/etc/caddy/Caddyfile caddy
+```
 
