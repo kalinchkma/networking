@@ -96,3 +96,37 @@ Deleting the volume
 ```bash
 docker volume rm VOLUME_NAME
 ```
+
+Rin containger without network access
+```bash
+docker run -d --network none IMAGE
+```
+
+Create network
+```bash
+docker network create NETWORK_NAME
+```
+
+List available network
+```bash
+docker network ls
+```
+
+Ex: load balancing using `caddy`
+
+```bash
+docker pull caddy
+```
+Create demo file to separete server context
+
+run server 1
+```bash
+docker run -d -p 8000:80 -v $PWD/index1.html:/usr/share/caddy/index.html caddy
+```
+run server 2
+```bash
+docker run -d -p 8001:80 -v $PWD/index2.html:/usr/share/caddy/index.html caddy
+```
+
+
+
