@@ -151,3 +151,28 @@ run loadbalancer
 docker run -d --network ganja -p 8080:80 -v $PWD/Caddyfile:/etc/caddy/Caddyfile caddy
 ```
 
+#### Dockerfile
+
+```code
+# Use base image
+FROM debian:stable-slim
+
+# execute the command
+CMD ["echo", "hello world"]
+```
+Save as a `Dockerfile` and build the image
+```bash
+docker build . -t image_name:tag
+```
+- `-t image_name:tag` to specify image name and tag
+
+```bash
+docker build . -t test:latest
+```
+```bash 
+docker run test
+```
+
+
+
+
