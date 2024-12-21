@@ -77,8 +77,9 @@ func concurrentFib(n int) {
 	fmt.Println(result)
 }
 
-func channelRunner() {
+func ChannelRunner() {
 	simulateEmailSend()
 	channels()
 	concurrentFib(10)
+
 }

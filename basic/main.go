@@ -23,6 +23,17 @@ type product struct {
 	}
 }
 
+func printVariableType(v interface{}) {
+	switch t := v.(type) {
+	case int:
+		fmt.Printf("%T\n", t)
+	case string:
+		fmt.Printf("%T\n", t)
+	default:
+		fmt.Printf("We don't have this %T type\n", t)
+	}
+}
+
 func main() {
 	lambo := car{
 		brand: "Lamborginig",
@@ -55,17 +66,5 @@ func main() {
 	printVariableType(10)
 	printVariableType("ad")
 	printVariableType(23.12)
-
-	channelRunner()
-}
-
-func printVariableType(v interface{}) {
-	switch t := v.(type) {
-	case int:
-		fmt.Printf("%T\n", t)
-	case string:
-		fmt.Printf("%T\n", t)
-	default:
-		fmt.Printf("We don't have this %T type\n", t)
-	}
+	logger()
 }
