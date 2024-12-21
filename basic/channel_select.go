@@ -6,7 +6,7 @@ import (
 	"time"
 )
 
-func logger() {
+func Logger() {
 	sms := []string{
 		"First message",
 		"Second Message",

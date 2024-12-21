@@ -66,5 +66,6 @@ func main() {
 	printVariableType(10)
 	printVariableType("ad")
 	printVariableType(23.12)
-	logger()
+	// Logger()
+	RunPingPong()
 }
