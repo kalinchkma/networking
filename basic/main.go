@@ -69,4 +69,5 @@ func main() {
 	// Logger()
 	RunPingPong()
 	// RunProcess()
+	runReadWrite()
 }
