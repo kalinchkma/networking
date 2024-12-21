@@ -7,16 +7,16 @@ import (
 
 func RunPingPong() {
 	fmt.Println("Starting game....")
-	pingPong(4)
+	pingPong(3)
 	fmt.Println("======= Game over =======")
 }
 
 func pingPong(numPings int) {
-	pings := make(chan struct{})
-	pongs := make(chan struct{})
+	pings := make(chan struct{}, numPings)
+	pongs := make(chan struct{}, numPings)
 
-	go ponger(pings, pongs)
 	go pinger(pings, numPings)
+	go ponger(pings, pongs)
 	go func() {
 		i := 0
 		for range pongs {
