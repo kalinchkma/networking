@@ -67,7 +67,8 @@ func main() {
 	printVariableType("ad")
 	printVariableType(23.12)
 	// Logger()
-	RunPingPong()
+	// RunPingPong()
 	// RunProcess()
-	runReadWrite()
+	// RunReadWrite()
+	RunTestValidation()
 }

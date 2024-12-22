@@ -55,7 +55,7 @@ func readLoop(m map[int]int, mu *sync.Mutex) {
 	}
 }
 
-func runReadWrite() {
+func RunReadWrite() {
 	m := map[int]int{}
 	mu := &sync.Mutex{}
 	go writeLoop(m, mu)
